@@ -11,9 +11,7 @@ var {parseData} = require('./data/csv-read')
 // parseData(inputFile);
 
 //
-// Trial.find({}).then((trial) => {
-//   console.log(trial);
-// }).catch((err) => console.log(err));
+
 
 var app = express();
 
@@ -25,10 +23,15 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static(__dirname +"/js"));
+app.use(express.static(__dirname +"/public"));
 
 app.get('/d3', (req, res) => {
-  res.render('d3test.hbs');
+
+  Trial.find({}).then((trial) => {
+    trial = encodeURIComponent(JSON.stringify(trial));
+    res.render('d3test.hbs', {trial})
+  }).catch((err) => console.log(err));
+
 }, (err) => {
   console.log("unable to get, ", err);
 });
