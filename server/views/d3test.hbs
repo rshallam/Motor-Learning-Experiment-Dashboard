@@ -13,7 +13,11 @@
   </body>
 
   <script src="https://d3js.org/d3.v5.min.js"></script>
-  <script>var decodedJSON = decodeURIComponent("{{trial}}")</script>
-  <script src="/js/trial.js"></script>
+  <script>
+    var decodedJSON = decodeURIComponent("{{trial}}")
+    var data =  JSON.parse(decodedJSON);
+  </script>
+  <script src="/js/data-format.js"></script>
+  <!-- <script src="/js/trial.js"></script> -->
 
 </html>

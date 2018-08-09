@@ -1,13 +1,9 @@
 const {parse} = require('csv');
 const fs = require('fs');
+const async = require("async");
 
 var {Trial} = require('./../models/trial')
 
-
-console.log('Processing file');
-
-
-// var inputFile = './server/data/testData.csv';
 
 
 var parseData = (inputFile) => {
@@ -16,17 +12,34 @@ var parseData = (inputFile) => {
   var cursorPosX = [];
   var cursorPosY = [];
   var trialData = [];
+  var cursorPos = [];
+  var handPos = [];
+  var cursorX;
+  var cursorY;
 
   var parser = parse({delimiter: ','}, (err, data) => {
     if (err) {
       return console.log(err);
     }
+
     data.forEach((line) => {
-      cursorPosX.push(parseInt(line[0]));
-      cursorPosY.push(parseInt(line[1]));
-      handPosX.push(parseInt(line[2]));
-      handPosY.push(parseInt(line[3]));
+      cursorX = parseInt(line[0]);
+      cursorY = parseInt(line[1]);
+      handX = parseInt(line[2])
+      handY = parseInt(line[3])
+
+      cursorPosX.push(cursorX);
+      cursorPosY.push(cursorY);
+
+      handPosX.push(handX);
+      handPosY.push(handY);
+
+      cursorPos.push([{cursorX}, {cursorY}]);
+      handPos.push([{handX}, {handY}]);
     })
+    console.log(cursorPos);
+    console.log(handPos);
+    console.log(cursorPosX);
 
     cursorPosX = cursorPosX.filter((obj) => !isNaN(obj))
     cursorPosY = cursorPosY.filter((obj) => !isNaN(obj))
@@ -42,21 +55,30 @@ var parseData = (inputFile) => {
       handPosX: handPosX,
       handPosY: handPosY
     });
+    // console.log(JSON.stringify(trial));
 
     trial.save().then(t => {
       console.log("saved to database, ", t);
     }).catch((err) => console.log("unable to save, ",err));
 
+
   });
-
-
-
   fs.createReadStream(inputFile).pipe(parser);
 
 };
 
+parseData('./server/data/testData.csv');
 
-// parseData(inputFile);
+// for(var i=1; i<=1; i++) {
+//   console.log('Processing file:  ', i);
+//   var inputFile = './server/data/testData' + i + '.csv';
+//   parseData(inputFile);
+// }
+
+
+
+
+
 
 module.exports = {
   parseData

@@ -1,4 +1,5 @@
-var data =  JSON.parse(decodedJSON);
+// var data =  JSON.parse(decodedJSON);
+console.log(data);
 data = data[0];
 
 width = 600;
