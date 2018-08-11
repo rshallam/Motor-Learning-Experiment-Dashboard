@@ -1,6 +1,14 @@
 const mongoose = require('mongoose');
 
 var trialSchema = new mongoose.Schema({
+  cursorPos: {
+    type: Array,
+    required: true
+  },
+  handPos: {
+    type: Array,
+    required: true
+  },
   cursorPosX: {
     type: Array,
     required: true
@@ -16,6 +24,14 @@ var trialSchema = new mongoose.Schema({
   handPosY: {
     type: Array,
     required: true
+  },
+  trial: {
+    type: Number,
+    required: true
+  },
+  dVelocity: {
+    type: Array,
+    required: false
   }
 });
 

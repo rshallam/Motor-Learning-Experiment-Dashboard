@@ -1,23 +1,24 @@
 // var data =  JSON.parse(decodedJSON);
-console.log(data);
 data = data[0];
-
+console.log(data);
 width = 600;
 height = 500;
 
 margin = {top: 20, right: 20, bottom: 100, left: 100}
 
-
-
 // Data formatting
+var cursorPos = data["cursorPos"];
 // Transforming the coordinates to reference point (720, 450)
 // Using normal orientation
-data["cursorPosX"] = data["cursorPosX"].map((d, i) => d - 720);
-data["cursorPosY"] = data["cursorPosY"].map((d, i) => 600 - d);
-data["handPosX"] = data["handPosX"].map((d, i) => d - 720);
-data["handPosY"] = data["handPosY"].map((d, i) => 600 - d);
+cursorPos.map((d, i) => {
+  d["cursorX"] = d["cursorX"] - 720;
+  d["cursorY"] = 600 - d["cursorY"];
+})
 
-var zipCursorPos = data["cursorPosX"].map((x, i) => ({cursorPosX: x, cursorPosY: data["cursorPosY"][i]}))
+// data["handPosX"] = data["handPosX"].map((d, i) => d - 720);
+// data["handPosY"] = data["handPosY"].map((d, i) => 600 - d);
+
+// var cursorPos = data["cursorPosX"].map((x, i) => ({cursorPosX: x, cursorPosY: data["cursorPosY"][i]}))
 
 const yOffset = 100;
 const targetOffset = 150
@@ -29,22 +30,19 @@ const startCircleY = 0;
 const targetCircleX = 0;
 const targetCircleY = startCircleY + targetOffset;
 
-var t = d3.transition().duration(1000);
+var t = d3.transition().duration(400);
 //  SCALES
 var x = d3.scaleLinear().domain([-width/2, width/2]).range([0, width]);
 var y= d3.scaleLinear().domain([-yOffset, 250]).range([height, 0]);
 // Line path generator
 var line = d3.line()
-  .x(d => x(d.cursorPosX))
-  .y(d => y(d.cursorPosY))
-
-
+  .x(d => x(d.cursorX))
+  .y(d => y(d.cursorY))
 
 
 // Axes
 var xAxisCall = d3.axisBottom(x);
 var yAxisCall = d3.axisLeft(y).ticks(5);
-
 
 
 // DESIGN
@@ -63,7 +61,22 @@ xAxis = g.append("g")
 yAxis = g.append("g")
   .attr("class", "y axis");
 
+//  X label
+g.append("text")
+	.attr("x", width/2)
+	.attr("y", height + 80)
+	.attr("text-anchor", "middle")
+	.attr("font-size", 20)
+	.text("X")
 
+// Y label
+g.append("text")
+	.attr("x", -height/2)
+	.attr("y", - 80)
+	.attr("transform", "rotate(-90)")
+	.attr("text-anchor", "middle")
+	.attr("font-size", 20)
+	.text("Y")
 
 // Draw Path
 var path = g.append("path")
@@ -74,8 +87,8 @@ var path = g.append("path")
 
 
 // Axes call
-xAxis.call(xAxisCall);
-yAxis.call(yAxisCall);
+xAxis.transition(t).call(xAxisCall);
+yAxis.transition(t).call(yAxisCall);
 
 
 // Draw start circle
@@ -99,6 +112,4 @@ g.append('circle')
 // -
 path
   .transition(t)
-  .attr("d", line(zipCursorPos));
-
-  console.log(zipCursorPos);
+  .attr("d", line(cursorPos));

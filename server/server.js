@@ -4,14 +4,11 @@ const {ObjectId} = require('mongodb')
 
 var {mongoose} = require('./db/mongoose');
 var {Trial} = require('./models/trial')
-var {parseData} = require('./data/csv-read')
+// var {parseData} = require('./data/csv-read')
 
 // var inputFile = 'server/data/testData.csv';
 
 // parseData(inputFile);
-
-//
-
 
 var app = express();
 
