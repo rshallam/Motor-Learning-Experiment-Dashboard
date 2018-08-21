@@ -9,6 +9,8 @@ var {mongoose} = require('./../db/mongoose');
 
 
 var parseData = (inputFile) => {
+  var referenceX = 720;
+  var referenceY = 600;
   var handPosX = [];
   var handPosY = [];
   var cursorPosX = [];
@@ -29,10 +31,15 @@ var parseData = (inputFile) => {
       if(i !== 0) {
         trial = parseInt(line[0])
 
+        //transforming orgin and reverse y-axis
         cursorX = parseInt(line[2]);
+        cursorX = cursorX - referenceX;
         cursorY = parseInt(line[3]);
+        cursorY = referenceY - cursorY
         handX = parseInt(line[4])
+        handX = handX - referenceX;
         handY = parseInt(line[5])
+        handY = referenceY - handY;
         dVel = parseFloat(line[6]);
 
         cursorPosX.push(cursorX);
@@ -48,13 +55,6 @@ var parseData = (inputFile) => {
       }
     })
     console.log(dVelocity, Math.max(...dVelocity));
-
-    // cursorPosX = cursorPosX.filter((obj) => !isNaN(obj))
-    // cursorPosY = cursorPosY.filter((obj) => !isNaN(obj))
-    // handPosX = handPosX.filter((obj) => !isNaN(obj))
-    // handPosY = handPosY.filter((obj) => !isNaN(obj))
-
-    // var trialData = {cursorPosX, cursorPosY, handPosX, handPosY};
 
 
     var trial = new Trial({
@@ -85,10 +85,6 @@ for(var i=1; i<=5; i++) {
   var inputFile = './server/data/testData' + i + '.csv';
   parseData(inputFile);
 }
-
-
-
-
 
 
 module.exports = {

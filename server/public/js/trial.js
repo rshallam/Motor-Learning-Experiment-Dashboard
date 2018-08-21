@@ -1,26 +1,14 @@
-// var data =  JSON.parse(decodedJSON);
-data = data[0];
 console.log(data);
-width = 600;
-height = 500;
 
-margin = {top: 20, right: 20, bottom: 100, left: 100}
+const width = 600;
+const height = 500;
 
-// Data formatting
-var cursorPos = data["cursorPos"];
-// Transforming the coordinates to reference point (720, 450)
-// Using normal orientation
-cursorPos.map((d, i) => {
-  d["cursorX"] = d["cursorX"] - 720;
-  d["cursorY"] = 600 - d["cursorY"];
-})
+const margin = {top: 20, right: 20, bottom: 100, left: 100}
 
-// data["handPosX"] = data["handPosX"].map((d, i) => d - 720);
-// data["handPosY"] = data["handPosY"].map((d, i) => 600 - d);
 
-// var cursorPos = data["cursorPosX"].map((x, i) => ({cursorPosX: x, cursorPosY: data["cursorPosY"][i]}))
+var cursorPos = data[0]["cursorPos"];
 
-const yOffset = 100;
+const yOffset = 50;
 const targetOffset = 150
 
 //  Design variables
@@ -78,8 +66,18 @@ g.append("text")
 	.attr("font-size", 20)
 	.text("Y")
 
-// Draw Path
-var path = g.append("path")
+// Insert trials
+var trials = g.selectAll('.trial')
+  .data(data)
+  .enter().append('g')
+  .attr("class", "trial");
+
+trials.append('g')
+  .attr('trial', d => d.trial)
+
+// Insert Path
+var path = g
+  .append("path")
   .attr("class", "line")
   .attr("fill", "none")
   .attr("stroke", "gray")
@@ -111,5 +109,4 @@ g.append('circle')
 
 // -
 path
-  .transition(t)
   .attr("d", line(cursorPos));
