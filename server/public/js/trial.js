@@ -5,9 +5,6 @@ const height = 500;
 
 const margin = {top: 20, right: 20, bottom: 100, left: 100}
 
-
-var cursorPos = data[0]["cursorPos"];
-
 const yOffset = 50;
 const targetOffset = 150
 
@@ -26,6 +23,7 @@ var y= d3.scaleLinear().domain([-yOffset, 250]).range([height, 0]);
 var line = d3.line()
   .x(d => x(d.cursorX))
   .y(d => y(d.cursorY))
+  .curve(d3.curveBasis)
 
 
 // Axes
@@ -66,23 +64,24 @@ g.append("text")
 	.attr("font-size", 20)
 	.text("Y")
 
-// Insert trials
+// Trial Data Join
 var trials = g.selectAll('.trial')
-  .data(data)
+  .data(data);
+
+
+// enter and update
+trials
   .enter().append('g')
-  .attr("class", "trial");
-
-trials.append('g')
-  .attr('trial', d => d.trial)
-
-// Insert Path
-var path = g
+  .attr("class", "trial")
   .append("path")
   .attr("class", "line")
   .attr("fill", "none")
   .attr("stroke", "gray")
-  .attr("stroke-width", "1px");
+  .attr("stroke-width", "1px")
+  .attr('d', d => line(d["cursorPos"]));
 
+// Remove old elements
+trials.exit().remove();
 
 // Axes call
 xAxis.transition(t).call(xAxisCall);
@@ -106,7 +105,3 @@ g.append('circle')
   .attr("stroke", "black")
   .attr("stroke-width", 2)
   .attr("fill", "none");
-
-// -
-path
-  .attr("d", line(cursorPos));
